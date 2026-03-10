@@ -18,13 +18,11 @@ namespace TeamMatches.Infrastructure.Configurations
 
             builder.HasOne(x => x.HomeTeam)
                 .WithMany()
-                .HasForeignKey(x => x.HomeTeamId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.HomeTeamId);
 
             builder.HasOne(x => x.GuestTeam)
                 .WithMany()
-                .HasForeignKey(x => x.GuestTeamId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.GuestTeamId);
         }
     }
 }

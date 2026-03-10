@@ -6,17 +6,23 @@ namespace TeamMatches.Application.Services
 {
     public class LeaderboardService : ILeaderboardService
     {
+        private readonly IGameRepository _gameRepository;
+        private readonly ITeamRepository _teamRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public LeaderboardService(IUnitOfWork unitOfWork)
+        public LeaderboardService(ITeamRepository teamRepository,
+            IGameRepository gameRepository,
+            IUnitOfWork unitOfWork)
         {
+            _gameRepository = gameRepository;
+            _teamRepository = teamRepository;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<IList<RankDto>> GetRankingsAsync()
         {
-            var teams = await _unitOfWork.Teams.GetAllAsync();
-            var games = await _unitOfWork.Games.GetAllAsync();
+            var teams = await _teamRepository.GetAllAsync();
+            var games = await _gameRepository.GetAllAsync();
 
             var rankings = teams.Select(team =>
             {

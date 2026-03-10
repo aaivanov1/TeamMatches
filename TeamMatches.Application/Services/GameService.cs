@@ -9,11 +9,18 @@ namespace TeamMatches.Application.Services
 {
     public class GameService : IGameService
     {
+        private readonly IGameRepository _gameRepository;
+        private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public GameService(IMapper mapper, IUnitOfWork unitOfWork)
+        public GameService(ITeamRepository teamRepository,
+            IGameRepository gameRepository,
+            IMapper mapper,
+            IUnitOfWork unitOfWork)
         {
+            _gameRepository = gameRepository;
+            _teamRepository = teamRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,33 +39,33 @@ namespace TeamMatches.Application.Services
                 PlayedOnUtc = playedOnUtc
             };
 
-            await _unitOfWork.Games.InsertAsync(game);
+            await _gameRepository.InsertAsync(game);
             await _unitOfWork.CompleteAsync();
 
-            var created = await _unitOfWork.Games.GetByIdAsync(game.Id);
+            var created = await _gameRepository.GetByIdAsync(game.Id);
             return _mapper.Map<GameDto>(created);
         }
 
 
         public async Task DeleteAsync(Guid id)
         {
-            var game = await _unitOfWork.Games.GetByIdAsync(id);
+            var game = await _gameRepository.GetByIdAsync(id);
             if (game is null)
                 throw new NotFoundException($"Game with id '{id}' was not found.");
 
-            _unitOfWork.Games.Remove(game);
+            _gameRepository.Remove(game);
             await _unitOfWork.CompleteAsync();
         }
 
         public async Task<IList<GameDto>> GetAllAsync()
         {
-            var games = await _unitOfWork.Games.GetAllAsync();
+            var games = await _gameRepository.GetAllAsync();
             return games.Select(_mapper.Map<GameDto>).ToList();
         }
 
         public async Task<GameDto> GetByIdAsync(Guid id)
         {
-            var game = await _unitOfWork.Games.GetByIdAsync(id);
+            var game = await _gameRepository.GetByIdAsync(id);
             if (game is null)
                 throw new NotFoundException($"Game with id '{id}' was not found.");
 
@@ -69,7 +76,7 @@ namespace TeamMatches.Application.Services
         {
             await ValidateMatchAsync(homeTeamId, guestTeamId, homeScore, guestScore);
 
-            var game = await _unitOfWork.Games.GetByIdAsync(id);
+            var game = await _gameRepository.GetByIdAsync(id);
             if (game is null)
                 throw new NotFoundException($"Game with id '{id}' was not found");
 
@@ -79,10 +86,10 @@ namespace TeamMatches.Application.Services
             game.GuestTeamScore = guestScore;
             game.PlayedOnUtc = playedOnUtc;
 
-            _unitOfWork.Games.Update(game);
+            _gameRepository.Update(game);
             await _unitOfWork.CompleteAsync();
 
-            var updated = await _unitOfWork.Games.GetByIdAsync(id);
+            var updated = await _gameRepository.GetByIdAsync(id);
             return _mapper.Map<GameDto>(updated);
         }
 
@@ -98,13 +105,13 @@ namespace TeamMatches.Application.Services
             if (homeScore < 0 || guestScore < 0)
                 throw new ValidationException("Scores cannot be negative.");
 
-            var homeTeam = await _unitOfWork.Teams.GetByIdAsync(homeTeamId);
+            var homeTeam = await _teamRepository.GetByIdAsync(homeTeamId);
             if (homeTeam is null)
-                throw new ValidationException("Home team does not exist.");
+                throw new NotFoundException("Team does not exist.");
 
-            var awayTeam = await _unitOfWork.Teams.GetByIdAsync(guestTeamId);
+            var awayTeam = await _teamRepository.GetByIdAsync(guestTeamId);
             if (awayTeam is null)
-                throw new ValidationException("Away team does not exist.");
+                throw new NotFoundException("Team does not exist.");
         }
     }
 }

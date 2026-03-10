@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using TeamMatches.Api.Exceptions;
 using TeamMatches.Api.Extensions;
+using TeamMatches.Infrastructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,12 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 
-//app.UseCustomExceptionHandling();
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+    await dbContext.Database.MigrateAsync();
+}
+
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())

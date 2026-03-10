@@ -16,6 +16,6 @@
 
         public int GuestTeamScore { get; set; }
 
-        public DateTime PlaidOnUtc { get; set; }
+        public DateTime PlayedOnUtc { get; set; }
     }
 }
