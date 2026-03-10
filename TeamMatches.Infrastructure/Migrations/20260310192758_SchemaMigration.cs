@@ -27,7 +27,7 @@ namespace TeamMatches.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Matches",
+                name: "Games",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -35,20 +35,20 @@ namespace TeamMatches.Infrastructure.Migrations
                     GuestTeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     HomeTeamScore = table.Column<int>(type: "int", nullable: false),
                     GuestTeamScore = table.Column<int>(type: "int", nullable: false),
-                    PlaidOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PlayedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Matches", x => x.Id);
+                    table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Matches_Teams_GuestTeamId",
+                        name: "FK_Games_Teams_GuestTeamId",
                         column: x => x.GuestTeamId,
                         principalTable: "Teams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Matches_Teams_HomeTeamId",
+                        name: "FK_Games_Teams_HomeTeamId",
                         column: x => x.HomeTeamId,
                         principalTable: "Teams",
                         principalColumn: "Id",
@@ -56,27 +56,28 @@ namespace TeamMatches.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Matches_GuestTeamId",
-                table: "Matches",
+                name: "IX_Games_GuestTeamId",
+                table: "Games",
                 column: "GuestTeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Matches_HomeTeamId",
-                table: "Matches",
+                name: "IX_Games_HomeTeamId",
+                table: "Games",
                 column: "HomeTeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teams_Name",
                 table: "Teams",
                 column: "Name",
-                unique: true);
+                unique: true,
+                filter: "[IsDeleted] = 0");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Matches");
+                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "Teams");

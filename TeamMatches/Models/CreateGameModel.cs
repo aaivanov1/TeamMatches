@@ -1,6 +1,6 @@
 ﻿namespace TeamMatches.Api.Models
 {
-    public class CreateGameRequest
+    public class CreateGameModel
     {
         public Guid HomeTeamId { get; set; }
 

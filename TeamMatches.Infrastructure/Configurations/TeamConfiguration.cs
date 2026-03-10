@@ -11,7 +11,9 @@ namespace TeamMatches.Infrastructure.Configurations
             builder.ToTable("Teams");
             builder.HasKey(t => t.Id);
             builder.Property(x => x.Name).IsRequired();
-            builder.HasIndex(x => x.Name).IsUnique();
+            builder.HasIndex(x => x.Name)
+             .IsUnique()
+             .HasFilter("[IsDeleted] = 0");
             builder.Property(x => x.CreatedOnUtc).IsRequired();
             builder.Property(x => x.UpdatedOnUtc).IsRequired();
         }

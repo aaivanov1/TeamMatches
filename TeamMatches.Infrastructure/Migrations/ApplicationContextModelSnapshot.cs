@@ -43,7 +43,7 @@ namespace TeamMatches.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("PlaidOnUtc")
+                    b.Property<DateTime>("PlayedOnUtc")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -52,7 +52,7 @@ namespace TeamMatches.Infrastructure.Migrations
 
                     b.HasIndex("HomeTeamId");
 
-                    b.ToTable("Matches", (string)null);
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("TeamMatches.Domain.Models.Team", b =>
@@ -77,7 +77,8 @@ namespace TeamMatches.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("Teams", (string)null);
                 });

@@ -1,3 +1,4 @@
+using TeamMatches.Api.Exceptions;
 using TeamMatches.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +9,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplicationServices(builder.Configuration);
 
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
 
 //app.UseCustomExceptionHandling();
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

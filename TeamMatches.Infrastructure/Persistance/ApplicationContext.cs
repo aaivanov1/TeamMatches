@@ -15,6 +15,8 @@ namespace TeamMatches.Infrastructure.Persistance
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+            modelBuilder.Entity<Game>().HasQueryFilter(r => !r.IsDeleted);
+            modelBuilder.Entity<Team>().HasQueryFilter(r => !r.IsDeleted);
             base.OnModelCreating(modelBuilder);
         }
     }

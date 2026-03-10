@@ -8,13 +8,13 @@ namespace TeamMatches.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Game> builder)
         {
-            builder.ToTable("Matches");
+            builder.ToTable("Games");
 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.HomeTeamScore).IsRequired();
             builder.Property(x => x.GuestTeamScore).IsRequired();
-            builder.Property(x => x.PlaidOnUtc).IsRequired();
+            builder.Property(x => x.PlayedOnUtc).IsRequired();
 
             builder.HasOne(x => x.HomeTeam)
                 .WithMany()

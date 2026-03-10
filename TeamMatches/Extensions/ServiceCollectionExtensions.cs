@@ -23,10 +23,9 @@ namespace TeamMatches.Api.Extensions
             services.AddScoped<IGameRepository, GameRepository>();
 
             services.AddScoped<ITeamService, TeamService>();
-            //services.AddScoped<IMatchService, MatchService>();
-            //services.AddScoped<IRankingService, RankingService>();
+            services.AddScoped<IGameService, GameService>();
+            services.AddScoped<ILeaderboardService, LeaderboardService>();
 
-            //services.AddScoped<IPointsCalculator, StandardPointsCalculator>();
 
             services.AddAutoMapper(cfg =>
             {

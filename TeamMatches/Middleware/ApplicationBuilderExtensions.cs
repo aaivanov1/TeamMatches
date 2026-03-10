@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using TeamMatches.Api.Exceptions;
 
 namespace TeamMatches.Api.Middleware
 {
@@ -6,7 +6,7 @@ namespace TeamMatches.Api.Middleware
     {
         public static IApplicationBuilder UseCustomExceptionHandling(this IApplicationBuilder app)
         {
-            return app.UseMiddleware<ExceptionHandlerMiddleware>();
+            return app.UseMiddleware<GlobalExceptionHandler>();
         }
     }
 }
